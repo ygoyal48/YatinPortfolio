@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { profile, journey, projects, resume } from './content'
 import './App.css'
 
@@ -7,6 +8,43 @@ const sections = [
   { id: 'resume', label: 'Resume' },
   { id: 'contact', label: 'Contact' },
 ]
+
+function useReveal() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('in-view')
+          io.disconnect()
+        }
+      },
+      { threshold: 0.15 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  return ref
+}
+
+function ArrowIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path
+        d="M2 12L12 2M12 2H4M12 2V10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
 
 function Nav() {
   return (
@@ -28,7 +66,10 @@ function Nav() {
 function Hero() {
   return (
     <section id="top" className="hero">
-      <p className="eyebrow">{profile.tagline}</p>
+      <div className="hero-glow" aria-hidden="true" />
+      <p className="eyebrow">
+        <span className="dot" /> {profile.tagline}
+      </p>
       <h1>{profile.name}</h1>
       <p className="hero-intro">{profile.intro}</p>
       <div className="hero-actions">
@@ -43,15 +84,30 @@ function Hero() {
   )
 }
 
-function Journey() {
+function SectionHeading({ index, title }) {
   return (
-    <section id="journey" className="section">
-      <h2 className="section-title">Journey</h2>
+    <div className="section-heading">
+      <span className="section-index">{index}</span>
+      <h2 className="section-title">{title}</h2>
+      <span className="section-rule" />
+    </div>
+  )
+}
+
+function Journey() {
+  const ref = useReveal()
+  return (
+    <section id="journey" className="section reveal" ref={ref}>
+      <SectionHeading index="01" title="Journey" />
       <div className="timeline">
         {journey.map((item) => (
           <div className="timeline-item" key={item.year}>
-            <div className="timeline-year">{item.year}</div>
+            <div className="timeline-marker">
+              <span className="timeline-dot" />
+              <span className="timeline-line" />
+            </div>
             <div className="timeline-body">
+              <span className="timeline-year">{item.year}</span>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
             </div>
@@ -63,13 +119,25 @@ function Journey() {
 }
 
 function Projects() {
+  const ref = useReveal()
   return (
-    <section id="projects" className="section">
-      <h2 className="section-title">Projects</h2>
+    <section id="projects" className="section reveal" ref={ref}>
+      <SectionHeading index="02" title="Projects" />
       <div className="project-grid">
         {projects.map((p) => (
-          <div className="project-card" key={p.title}>
-            <h3>{p.title}</h3>
+          <a
+            className="project-card"
+            key={p.title}
+            href={p.liveUrl || p.repoUrl || '#'}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="project-card-top">
+              <h3>{p.title}</h3>
+              <span className="project-arrow">
+                <ArrowIcon />
+              </span>
+            </div>
             <p>{p.description}</p>
             <div className="project-tags">
               {p.tags.map((t) => (
@@ -78,19 +146,7 @@ function Projects() {
                 </span>
               ))}
             </div>
-            <div className="project-links">
-              {p.liveUrl && (
-                <a href={p.liveUrl} target="_blank" rel="noreferrer">
-                  Live
-                </a>
-              )}
-              {p.repoUrl && (
-                <a href={p.repoUrl} target="_blank" rel="noreferrer">
-                  Code
-                </a>
-              )}
-            </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>
@@ -98,26 +154,34 @@ function Projects() {
 }
 
 function Resume() {
+  const ref = useReveal()
   return (
-    <section id="resume" className="section">
-      <h2 className="section-title">Resume</h2>
-      <p className="resume-summary">{resume.summary}</p>
-      <ul className="resume-highlights">
-        {resume.highlights.map((h) => (
-          <li key={h}>{h}</li>
-        ))}
-      </ul>
-      <a className="btn btn-primary" href={resume.pdfPath} download>
-        Download resume
-      </a>
+    <section id="resume" className="section reveal" ref={ref}>
+      <SectionHeading index="03" title="Resume" />
+      <div className="resume-card">
+        <p className="resume-summary">{resume.summary}</p>
+        <ul className="resume-highlights">
+          {resume.highlights.map((h) => (
+            <li key={h}>
+              <span className="bullet" />
+              {h}
+            </li>
+          ))}
+        </ul>
+        <a className="btn btn-primary" href={resume.pdfPath} download>
+          Download resume
+        </a>
+      </div>
     </section>
   )
 }
 
 function Contact() {
   return (
-    <section id="contact" className="section contact">
-      <h2 className="section-title">Contact</h2>
+    <section id="contact" className="section contact reveal-section">
+      <div className="hero-glow contact-glow" aria-hidden="true" />
+      <span className="section-index center">04</span>
+      <h2 className="contact-title">Let's build something.</h2>
       <p>Have a project in mind, or just want to say hi?</p>
       <a className="contact-email" href={`mailto:${profile.email}`}>
         {profile.email}
