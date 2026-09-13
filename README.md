@@ -25,5 +25,5 @@ site and publishes it to GitHub Pages automatically.
 
 One-time setup on GitHub: **Settings → Pages → Source → GitHub Actions**.
 
-The site is configured to be served from `/portfolio/` (see `base` in
+The site is configured to be served from `/YatinPortfolio/` (see `base` in
 `vite.config.js`). If you rename the repo, update that path to match.
