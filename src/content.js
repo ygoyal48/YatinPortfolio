@@ -3,6 +3,7 @@
 
 export const profile = {
   name: 'Your Name',
+  handle: 'you@dev',
   tagline: 'Software Engineer',
   intro:
     "I build things for the web. This is where I share my journey, the projects I've worked on, and how to reach me.",
@@ -38,26 +39,29 @@ export const journey = [
 
 export const projects = [
   {
-    title: 'Project One',
+    title: 'project-one',
     description:
       'A short, concrete description of the project and the problem it solves.',
-    tags: ['React', 'Node.js'],
+    tags: ['react', 'node'],
+    status: 'stable',
     liveUrl: '',
     repoUrl: 'https://github.com/yourusername/project-one',
   },
   {
-    title: 'Project Two',
+    title: 'project-two',
     description:
       'A short, concrete description of the project and the problem it solves.',
-    tags: ['Python', 'ML'],
+    tags: ['python', 'ml'],
+    status: 'stable',
     liveUrl: '',
     repoUrl: 'https://github.com/yourusername/project-two',
   },
   {
-    title: 'Project Three',
+    title: 'project-three',
     description:
       'A short, concrete description of the project and the problem it solves.',
-    tags: ['TypeScript'],
+    tags: ['typescript'],
+    status: 'active',
     liveUrl: '',
     repoUrl: 'https://github.com/yourusername/project-three',
   },
@@ -66,6 +70,12 @@ export const projects = [
 export const resume = {
   summary:
     'One or two sentences summarizing your experience and what you specialize in.',
+  meta: [
+    { label: 'role', value: 'engineer' },
+    { label: 'focus', value: 'fullstack' },
+    { label: 'exp', value: '4y' },
+    { label: 'avail', value: 'open' },
+  ],
   highlights: [
     'A key skill or area of expertise',
     'A notable achievement or responsibility',
